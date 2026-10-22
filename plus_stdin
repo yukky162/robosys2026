@@ -3,6 +3,7 @@ import sys
 
 x=0.0
 for line in sys.stdin:
-    x += float(line)
+    line = line.rstrip()    #for文の下にこの行を挿入
+    x += tonum(line)
 
 print(x)
