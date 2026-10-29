@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+# SPDX-FileCopyrightText: 2026 Yukine Higuchi
+# SPDX-License-Identifier: BSD-3-Clause
+import sys
+
+x=0.0
+for line in sys.stdin:
+    x += tonum(line.rstrip())   #line.rstrip()で末尾の改行を除去
+
+
+print(x)
