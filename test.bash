@@ -1,14 +1,27 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2026 Yukine Higuchi
+# SPDX-License-Identifier: BSD-3-Clause
 
-ng () {                          # 関数ngの定義
-        echo ${1}行目のテスト失敗   # $1はngの1番目の引数
-        res=1                    # 追加: 失敗したことを記録
+ng () {                               # 関数ngの定義（P18と同じ）
+         echo ${1}行目のテスト失敗
+         res=1                          # 失敗したことを記録
 }
 
-res=0                            # 0: 失敗なし（ngが呼ばれると1になる）
-a=鈴木
-[ "$a" = 鈴本 ] || ng "$LINENO"  # LINENOはこの行の行番号の入る変数
-[ "$a" = 鈴木 ] || ng "$LINENO"  # 失敗したら関数ngを呼び出す（$LINENOの値が$1に入る）
+res=0                                  # 0: 失敗なし（ngが呼ばれると1になる）
 
-exit $res     # このシェルスクリプトの終了ステータスを返して終了
+### NORMAL INPUT ###
+out=$(seq 5 | ./plus)
+[ "$?" = 0 ]      || ng "$LINENO"
+[ "${out}" = 15 ] || ng "$LINENO"
+### STRANGE INPUT ###
+out=$(echo あ | ./plus)           #計算できない値を入力してみる
+[ "$?" = 1 ]      || ng "$LINENO" #終了ステータスが1なのを確認
+[ "${out}" = "" ] || ng "$LINENO" #上の行と入れ替えるとダメ（なぜ？）
+
+out=$(echo | ./plus)              #なにも入力しない
+[ "$?" = 1 ]      || ng "$LINENO" #これも異常終了する
+[ "${out}" = "" ] || ng "$LINENO"
+
+[ "${res}" = 0 ] && echo OK
+exit $res
 
