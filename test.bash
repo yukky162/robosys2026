@@ -22,6 +22,24 @@ out=$(echo | ./plus)              #なにも入力しない
 [ "$?" = 1 ]      || ng "$LINENO" #これも異常終了する
 [ "${out}" = "" ] || ng "$LINENO"
 
+### STATS NORMAL INPUT ###
+expected=$'count: 5\nsum: 15\nmean: 3.0\nmin: 1\nmax: 5'
+out=$(seq 5 | ./stats)
+[ "$?" = 0 ]        || ng "$LINENO"
+[ "${out}" = "${expected}" ] || ng "$LINENO"
+
+out=$(seq 5 | ./stats --min --max)
+[ "$?" = 0 ]        || ng "$LINENO"
+[ "${out}" = $'min: 1\nmax: 5' ] || ng "$LINENO"
+
+### STATS STRANGE INPUT ###
+out=$(echo あ | ./stats 2>/dev/null)
+[ "$?" = 1 ]        || ng "$LINENO"
+[ "${out}" = "" ]   || ng "$LINENO"
+
+out=$(echo | ./stats 2>/dev/null)
+[ "$?" = 1 ]        || ng "$LINENO"
+[ "${out}" = "" ]   || ng "$LINENO"
 [ "${res}" = 0 ] && echo OK
 exit $res
 
